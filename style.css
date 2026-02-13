@@ -5,15 +5,22 @@
     --dark-grey: #4747477a;
     --light-white: #fa0404;
     --footer-bg: #4747477a;
+    --main-gold1: #f1b40b;
+    --main-green1: #398c15;
 }
 
 
 :root {
-    --sea-blue: #0077b6;       /* لون البحر العميق */
-    --sky-blue: #ade8f4;       /* لون السماء الصافية */
-    --coral-red: #e76f51;      /* لون المأكولات البحرية (جمبري/استاكوزا) */
-    --dark-: #023e8a;      /* لون داكن للهيدر */
-    --white-: #000000;     /* لون زبد البحر */
+    --sea-blue: #0077b6;
+    /* لون البحر العميق */
+    --sky-blue: #ade8f4;
+    /* لون السماء الصافية */
+    --coral-red: #e76f51;
+    /* لون المأكولات البحرية (جمبري/استاكوزا) */
+    --dark-: #023e8a;
+    /* لون داكن للهيدر */
+    --white-: #000000;
+    /* لون زبد البحر */
 }
 
 
@@ -35,61 +42,44 @@ body {
     background-size: cover;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
 @keyframes moveBackground {
-    from { background-position: 0 0; }
-    to { background-position: -2000px 0; }
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -2000px 0;
+    }
 }
 
 
 
+.responsive-logo {
+    max-width: 30%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
 
+/* تعديلات للهواتف */
+@media (max-width: 768px) {
+    .responsive-logo {
+        max-width: 50%;
+    }
+}
 
-
-
-
-
-
-        .responsive-logo {
-            max-width: 30%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        
-        /* تعديلات للهواتف */
-        @media (max-width: 768px) {
-            .responsive-logo {
-                max-width: 50%;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .responsive-logo {
-                max-width: 55%;
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@media (max-width: 480px) {
+    .responsive-logo {
+        max-width: 55%;
+    }
+}
 
 /* الهيدر */
 header {
@@ -104,12 +94,14 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
+    backdrop-filter: blur(5px);
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-    white-space: nowrap; /* لجعل الاسم في سطر واحد دائماً */
+    white-space: nowrap;
+    /* لجعل الاسم في سطر واحد دائماً */
 }
 
 .logo-box {
@@ -119,7 +111,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background:  #282c4b00;
+    background: #282c4b00;
     border-radius: 8px;
 }
 
@@ -148,7 +140,9 @@ nav ul li a {
     transition: 0.3s;
 }
 
-nav ul li a:hover { color: var(--main-gold); }
+nav ul li a:hover {
+    color: var(--main-gold);
+}
 
 /* أيقونة القائمة للهاتف */
 #check {
@@ -159,42 +153,49 @@ nav ul li a:hover { color: var(--main-gold); }
     font-size: 30px;
     color: white;
     cursor: pointer;
-    display: none; /* مخفية في الشاشات الكبيرة */
+    display: none;
+    /* مخفية في الشاشات الكبيرة */
 }
-
 /* الموبايل - Media Query */
 @media (max-width: 850px) {
     .checkbtn {
         display: block;
     }
+
     nav ul {
         position: fixed;
         width: 100%;
         height: auto;
         background: var(--dark-grey);
         top: 80px;
-        right: -100%; /* مخفية جهة اليمين */
+        right: -100%;
+        /* مخفية جهة اليمين */
         text-align: center;
         transition: all .5s;
         flex-direction: column;
         padding: 20px 0;
         border-bottom: 2px solid var(--main-gold);
     }
+
     nav ul li {
         margin: 15px 0;
     }
+
     /* عند الضغط على الزر تظهر القائمة */
-    #check:checked ~ ul {
+    #check:checked~ul {
         right: 0;
     }
 }
 
 /* الفوتر */
 footer {
-    margin-top: auto; /* يدفع الفوتر للأسفل */
-    flex-shrink: 0;   /* يمنع الفوتر من الانكماش */
+    margin-top: auto;
+    /* يدفع الفوتر للأسفل */
+    flex-shrink: 0;
+    /* يمنع الفوتر من الانكماش */
     background-color: var(--footer-bg);
     color: white;
+    backdrop-filter: blur(5px);
     padding: 40px 5% 20px;
     border-top: 5px solid var(--main-gold);
     width: 100%;

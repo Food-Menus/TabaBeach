@@ -1,38 +1,148 @@
-<div class="gallery-grid">
-    <div class="gallery-item"><img src="img1.jpg" onclick="openLightbox(this.src)"></div>
-    <div class="gallery-item"><img src="img2.jpg" onclick="openLightbox(this.src)"></div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taba Beach - معرض الصور</title>
+    <link rel="icon" href="./statics/logoooo.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.min.css">
+    
+    <style>
+        .gallery-section { padding: 40px 5%; flex: 1; }
+        
+        .page-title {
+            background: rgba(71, 71, 71, 0.48);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid var(--main-gold);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        /* نظام ميكروسوفت القديم - شبكة غير منتظمة */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-auto-rows: 150px;
+            grid-auto-flow: dense; /* لملء الفراغات تلقائياً */
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: 0.5s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            z-index: 2;
+        }
+
+        .gallery-item:hover img {
+            filter: brightness(0.8);
+        }
+
+        /* التحكم في أحجام الصور لتشبه الويندوز القديم */
+        .wide { grid-column: span 2; }
+        .tall { grid-row: span 2; }
+        .big  { grid-column: span 2; grid-row: span 2; }
+
+        @media (max-width: 600px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .big, .wide { grid-column: span 2; }
+        }
+
+        .footer-gallery {
+            text-align: center;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-box"><img src="./statics/logoooo.png" alt="Logo" style="width: 100%;"></div>
+            <div class="site-name">Taba Beach</div>
+        </div>
+        <nav>
+            <input type="checkbox" id="check"><label for="check" class="checkbtn">☰</label>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="gallery.html">المعرض</a></li>
+                <li><a href="pricing.html">الأسعار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="gallery-section">
+        <div class="page-title">
+            <h1>معرض الصور</h1><br>
+            <p>جولة بصرية داخل أركان طابا بيتش</p>
+        </div>
+
+        <div class="gallery-grid" id="my-gallery">
+            
+            <a href="./statics/gllery/342bc930-ceda-4c7c-8098-7fa272f94d5f.jpg" data-pswp-width="1200" data-pswp-height="800" class="gallery-item big">
+                <img src="./statics/gllery/342bc930-ceda-4c7c-8098-7fa272f94d5f.jpg" alt="شاليه VIP">
+            </a>
+
+            <a href="./statics/gllery/855cd07a-5628-4e83-920f-12c2ed1a382b.jpg" data-pswp-width="800" data-pswp-height="1200" class="gallery-item tall">
+                <img src="./statics/gllery/855cd07a-5628-4e83-920f-12c2ed1a382b.jpg" alt="إطلالة الشاليه">
+            </a>
+
+            <a href="./statics/gllery/55c3f129-0207-4a57-b4a3-19756f46248e.jpg" data-pswp-width="1200" data-pswp-height="600" class="gallery-item wide">
+                <img src="./statics/gllery/55c3f129-0207-4a57-b4a3-19756f46248e.jpg" alt="حمام السباحة">
+            </a>
+
+            <a href="./statics/gllery/a6bb4c5b-d419-44e6-8cc6-17d20ac54a6e.jpg" data-pswp-width="1000" data-pswp-height="1000" class="gallery-item">
+                <img src="./statics/gllery/a6bb4c5b-d419-44e6-8cc6-17d20ac54a6e.jpg" alt="غرفة النوم">
+            </a>
+
+            <a href="./statics/gllery/e8bbd3de-c82b-4234-af9e-29df7b3f3f7e.jpg" data-pswp-width="800" data-pswp-height="1200" class="gallery-item tall">
+                <img src="./statics/gllery/e8bbd3de-c82b-4234-af9e-29df7b3f3f7e.jpg" alt="المكان من الخارج">
+            </a>
+
+            <a href="./statics/gllery/901ae085-ceb3-47d8-9281-e37064aabf88.jpg" data-pswp-width="1000" data-pswp-height="1000" class="gallery-item">
+                <img src="./statics/gllery/901ae085-ceb3-47d8-9281-e37064aabf88.jpg" alt="المطعم">
+            </a>
+
+            <a href="./statics/gllery/9c23f870-880a-4c79-83b3-59fa696deb83.jpg" data-pswp-width="1000" data-pswp-height="1000" class="gallery-item">
+                <img src="./statics/gllery/9c23f870-880a-4c79-83b3-59fa696deb83.jpg" alt="المطعم">
+            </a>
+        </div>
     </div>
 
-<div id="lightbox" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" onwheel="zoom(event)">
-</div>
+    <footer class="footer-gallery">
+        <h5 class="footer-bottom"> &copy; 2026 Techno Science - جميع الحقوق محفوظة</h5>
+    </footer>
 
-<script>
-    let scale = 1;
-    const img = document.getElementById('lightbox-img');
+    <script type="module">
+        import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe-lightbox.esm.min.js';
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#my-gallery',
+            children: 'a',
+            pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.2/photoswipe.esm.min.js')
+        });
+        lightbox.init();
+    </script>
 
-    function openLightbox(src) {
-        document.getElementById('lightbox').style.display = 'flex';
-        img.src = src;
-        scale = 1; 
-        img.style.transform = `scale(${scale})`;
-    }
-
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
-
-    function zoom(event) {
-        event.preventDefault();
-        scale += event.deltaY * -0.01;
-        scale = Math.min(Math.max(.5, scale), 3); // حدود التكبير
-        img.style.transform = `scale(${scale})`;
-        
-        // العودة للحجم الطبيعي بعد ثانية من التوقف (حسب طلبك)
-        clearTimeout(window.zoomTimeout);
-        window.zoomTimeout = setTimeout(() => {
-            scale = 1;
-            img.style.transform = `scale(1)`;
-        }, 1000);
-    }
-</script>
+</body>
+</html>
