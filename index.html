@@ -142,6 +142,88 @@
         .visible {
             display: flex !important;
         }
+
+
+
+
+
+
+
+
+        /* --- تنسيقات المساعد الذكي (فقاعة الماسنجر) --- */
+        #ai-bubble-container {
+            position: fixed;
+            bottom: 65px; /* فوق زرار التحميل */
+            right: 20px;
+            z-index: 9999;
+            touch-action: none; /* لمنع التمرير أثناء السحب */
+        }
+
+        .ai-bubble {
+            width: 60px;
+            height: 60px;
+            background: var(--ai-blue);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid rgb(255, 255, 255);
+            transition: transform 0.2s;
+        }
+
+        .ai-bubble:active { cursor: grabbing; }
+
+        .ai-bubble img {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+        }
+
+        /* رسالة ترحيبية منبثقة */
+        .ai-welcome-msg {
+            position: absolute;
+            right: 65px;
+            top: 10px;
+            background: rgba(255, 255, 255, 0.39);
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 15px 15px 0 15px;
+            font-size: 14px;
+            font-weight: bold;
+            width: 180px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            direction: rtl;
+            animation: popIn 0.5s ease forwards;
+        }
+
+        /* منطقة الحذف (أسفل الشاشة) */
+        #delete-zone {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px dashed red;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: red;
+            transition: 0.3s;
+            z-index: 9998;
+        }
+
+        #delete-zone.active { bottom: 20px; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8) translateX(20px); }
+            to { opacity: 1; transform: scale(1) translateX(0); }
+        }
+
     </style>
 </head>
 
@@ -190,6 +272,22 @@
 
     </section>
 
+    <div id="ai-bubble-container">
+        <div class="ai-welcome-msg" id="aiWelcome">أهلاً بك! أنا مساعدك الذكي، كيف يمكنني مساعدتك؟</div>
+        <div class="ai-bubble" id="aiBubble" onclick="goToChat()">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Robot">
+        </div>
+    </div>
+
+    <div id="delete-zone" id="deleteZone">
+        <i class="fas fa-trash-alt fa-2x"></i>
+    </div>
+
+    <a href="./statics/Taba Beach.apk" class="download-fab" download>
+        <img src="./statics/pngwing.com (3).png" alt="Download" class="fab-icon-img">
+        <span class="fab-text">تحميل التطبيق</span>
+    </a>
+
     <footer>        
         <a href="contact.html" class="btn btn-green1" style="background: var(--main-green1); flex: 1;"> تواصل معنا </a><br><br><hr>
         <h5 class="footer-bottom"> &copy; 2026 Techno Science - جميع الحقوق محفوظة</h5>
@@ -212,6 +310,106 @@
                 menuBtn.classList.remove('hidden');
                 options.classList.remove('visible');
             }
+        }
+    </script>
+
+    <script>
+        // --- وظائف المنيو القديمة ---
+        function showOptions(event) {
+            event.stopPropagation();
+            document.getElementById('menuBtn').classList.add('hidden');
+            document.getElementById('options').classList.add('visible');
+        }
+        window.onclick = function (event) {
+            if (!event.target.closest('.btn-container')) {
+                document.getElementById('menuBtn').classList.remove('hidden');
+                document.getElementById('options').classList.remove('visible');
+            }
+        }
+
+        // --- وظائف المساعد الذكي (السحب والإفلات) ---
+        const bubble = document.getElementById('ai-bubble-container');
+        const welcomeMsg = document.getElementById('aiWelcome');
+        const deleteZone = document.getElementById('delete-zone');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        // إخفاء رسالة الترحيب بعد 5 ثواني
+        setTimeout(() => { welcomeMsg.style.display = 'none'; }, 6000);
+
+        function goToChat() {
+            if (!isDragging) {
+                // استبدل chat.html برابط صفحة الشات التي صنعناها
+                window.location.href = './aichat.html'; 
+            }
+        }
+
+        bubble.addEventListener('touchstart', dragStart, {passive: false});
+        bubble.addEventListener('touchend', dragEnd, {passive: false});
+        bubble.addEventListener('touchmove', drag, {passive: false});
+
+        bubble.addEventListener('mousedown', dragStart);
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('mousemove', drag);
+
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            if (e.target.closest('#aiBubble')) {
+                isDragging = true;
+                deleteZone.classList.add('active');
+                welcomeMsg.style.display = 'none'; // إخفاء الرسالة عند التحريك
+            }
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+            
+            // تحقق إذا كان البوت في منطقة الحذف
+            const rect = deleteZone.getBoundingClientRect();
+            const bubbleRect = bubble.getBoundingClientRect();
+            
+            if (bubbleRect.top > rect.top - 50 && 
+                bubbleRect.left > rect.left - 50 && 
+                bubbleRect.left < rect.right + 50) {
+                bubble.style.display = 'none';
+            }
+
+            deleteZone.classList.remove('active');
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+
+                xOffset = currentX;
+                yOffset = currentY;
+
+                setTranslate(currentX, currentY, bubble);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
         }
     </script>
 

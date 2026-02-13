@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taba Beach - المساعد الذكي</title>
+    <link rel="icon" href="./statics/logoooo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
+
+        :root {
+            --main-gold: #c5a059;
+            --main-green: #2d5a27;
+            --dark-grey: #333333;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            font-family: 'Almarai', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* الخلفية المتحركة والمموهة */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('./statics/palmy-pejzazh-plyazh-31040.jpeg');
+            background-size: cover;
+            background-repeat: repeat-x;
+            animation: moveBackground 80s linear infinite;
+            filter: blur(8px);
+            transform: scale(1.1);
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: -2000px 0; }
+        }
+
+        .navbar {
+            background-color: rgba(51, 51, 51, 0.9);
+            color: var(--main-gold);
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--main-gold);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .chatbot-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 700px;
+            margin: 15px auto;
+            width: 95%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 180px; /* مساحة للأزرار */
+            scroll-behavior: smooth;
+        }
+
+        .message { display: flex; align-items: flex-end; gap: 8px; animation: fadeIn 0.3s ease; }
+        .message.bot { justify-content: flex-start; }
+        .message.user { justify-content: flex-end; flex-direction: row-reverse; }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message.bot .message-bubble { background: var(--white); color: #333; border-bottom-right-radius: 2px; border: 1px solid #ddd; }
+        .message.user .message-bubble { background: var(--main-green); color: white; border-bottom-left-radius: 2px; }
+
+        .bot-avatar { width: 35px; height: 35px; background: var(--main-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+
+        /* منطقة الأزرار */
+        .chat-options-wrapper {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-options { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+        .chat-option-button {
+            background-color: var(--white);
+            color: var(--main-green);
+            border: 2px solid var(--main-green);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .chat-option-button:hover { background-color: var(--main-green); color: white; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="brand-name"><i class="fas fa-umbrella-beach"></i> مساعدك الذكي</div>
+    </header>
+
+    <main class="chatbot-container">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-options-wrapper">
+            <div class="chat-options" id="chat-options"></div>
+        </div>
+    </main>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const chatOptions = document.getElementById('chat-options');
+
+        const chatData = {
+            initial: {
+                message: 'أهلاً بك في طابا بيتش بجوار فندق موفامبيك 🏖️. نحن هنا لخدمتك، ماذا تريد أن تعرف اليوم؟',
+                options: [
+                    { text: '🍽️ استفسار عن الأكل', nextState: 'food_main' },
+                    { text: '☕ استفسار عن المشروبات', nextState: 'drinks_main' },
+                    { text: '📅 المواعيد والعنوان', nextState: 'info_main' },
+                    { text: '🌊 الشاطئ والشاليهات', nextState: 'beach_chalet' }
+                ]
+            },
+            // --- قسم الطعام ---
+            food_main: {
+                message: 'عندنا مطعم متكامل بيقدم أحلى الأكلات. تحب تعرف تفاصيل عن إيه؟',
+                options: [
+                    { text: '🥩 المشويات', nextState: 'food_grilled' },
+                    { text: '🍕 البيتزا والسجق', nextState: 'food_pizza' },
+                    { text: '🌯 الكريب والبانيه', nextState: 'food_crepe' },
+                    { text: '🔙 العودة للبداية', nextState: 'initial' }
+                ]
+            },
+            food_grilled: {
+                message: 'المشويات عندنا على الفحم مباشرة 🍖: فراخ مشوية، كفتة، وحواوشي مميز جداً. تحب تعرف أنواع تانية؟',
+                options: [
+                    { text: '🍕 طب والبيتزا؟', nextState: 'food_pizza' },
+                    { text: '🍽️ حجز طاولة غداء', nextState: 'booking' },
+                    { text: '🔙 القائمة السابقة', nextState: 'food_main' }
+                ]
+            },
+            food_pizza: {
+                message: 'بنقدم بيتزا  مميزة 🍕: بيتزا سجق، بيتزا كفتة، وكمان بيتزا استربس وبانيه للأطفال والشباب.',
+                options: [
+                    { text: '🌯 طب والكريب؟', nextState: 'food_crepe' },
+                    { text: '🔙 القائمة السابقة', nextState: 'food_main' }
+                ]
+            },
+            food_crepe: {
+                message: 'الكريب عندنا حكاية! 🌯 متاح كريب استربس، بانيه، سجق، وكفتة، ومجهز بأجود المكونات.',
+                options: [
+                    { text: '🍱 مناسب للعزومات؟', nextState: 'parties' },
+                    { text: '🔙 القائمة السابقة', nextState: 'food_main' }
+                ]
+            },
+            // --- قسم المشروبات ---
+            drinks_main: {
+                message: 'المشروبات عندنا متنوعة جداً بين الساخن والبارد ☕🥤. إيه مشروبك المفضل؟',
+                options: [
+                    { text: '☕ مشروبات ساخنة', nextState: 'drinks_hot' },
+                    { text: '🥤 مشروبات باردة وكيز', nextState: 'drinks_cold' },
+                    { text: '🔙 العودة للبداية', nextState: 'initial' }
+                ]
+            },
+            drinks_hot: {
+                message: 'المشروبات الساخنة المتاحة ☕: شاي، قهوة، كركديه، ينسون، كابتشينو، وكافي ميكس.',
+                options: [
+                    { text: '🥤 والبارد متاح؟', nextState: 'drinks_cold' },
+                    { text: '🔙 القائمة السابقة', nextState: 'drinks_main' }
+                ]
+            },
+            drinks_cold: {
+                message: 'متاح عندنا جميع أنواع الكانز المنعشة 🥤 والعصائر لتستمتع بجو البحر.',
+                options: [
+                    { text: '🔙 القائمة السابقة', nextState: 'drinks_main' }
+                ]
+            },
+            // --- المعلومات والمواعيد ---
+            info_main: {
+                message: 'طابا بيتش شغال طول أيام الأسبوع لخدمتكم. تحب تعرف التفاصيل؟',
+                options: [
+                    { text: '⏰ مواعيد العمل', nextState: 'info_time' },
+                    { text: '📍 العنوان بالظبط', nextState: 'info_loc' },
+                    { text: '👨‍👩‍👧‍👦 هل المكان للعائلات؟', nextState: 'info_family' },
+                    { text: '🔙 العودة للبداية', nextState: 'initial' }
+                ]
+            },
+            info_time: {
+                message: 'نحن في انتظاركم يومياً من الساعة 10 صباحاً وحتى 12 منتصف الليل 🕛.',
+                options: [
+                    { text: '📍 طب والعنوان؟', nextState: 'info_loc' },
+                    { text: '🔙 القائمة السابقة', nextState: 'info_main' }
+                ]
+            },
+            info_loc: {
+                message: 'موقعنا ملوش مثيل 📍: جنوب سيناء - طابا - بجوار فندق موفامبيك مباشرة على البحر.',
+                options: [
+                    { text: '🌊 دخول الشاطئ', nextState: 'beach_chalet' },
+                    { text: '🔙 القائمة السابقة', nextState: 'info_main' }
+                ]
+            },
+            info_family: {
+                message: 'طبعاً! طابا بيتش مناسب جداً للعائلات، الصحاب، ولعمل أحلى العزومات والمناسبات 👨‍👩‍👧‍👦.',
+                options: [
+                    { text: '🍽️ حجز عزومة', nextState: 'booking' },
+                    { text: '🔙 القائمة السابقة', nextState: 'info_main' }
+                ]
+            },
+            // --- الشاطئ والشاليهات ---
+            beach_chalet: {
+                message: 'للاستجمام عندنا خيارات ممتازة. عن ماذا تبحث؟',
+                options: [
+                    { text: '🌊 نزول البحر وتذكرته', nextState: 'beach_ticket' },
+                    { text: '🏠 حجز شاليه', nextState: 'chalet_details' },
+                    { text: '🔙 العودة للبداية', nextState: 'initial' }
+                ]
+            },
+            beach_ticket: {
+                message: 'متاح نزول البحر طوال اليوم بتذكرة دخول، والمكان مجهز بكل سبل الراحة 🏖️.',
+                options: [
+                    { text: '🏠 تفاصيل الشاليهات', nextState: 'chalet_details' },
+                    { text: '🔙 القائمة السابقة', nextState: 'beach_chalet' }
+                ]
+            },
+            chalet_details: {
+                message: 'عندنا شاليهين للإيجار 🏠: سعر اليوم 1000 جنيه، مع تأمين 2000 جنيه (يسترد عند المغادرة).',
+                options: [
+                    { text: '📞 رقم الحجز', nextState: 'booking' },
+                    { text: '🔙 القائمة السابقة', nextState: 'beach_chalet' }
+                ]
+            },
+            // --- الحجز والعزومات ---
+            booking: {
+                message: 'لتأكيد حجز طاولة، عزومة، أو شاليه، يسعدنا تواصلك معنا مباشرة علي الرقم 01092228722📞. شرفنا بزيارتك!',
+                options: [
+                    { text: '🔙 العودة للبداية', nextState: 'initial' }
+                ]
+            },
+            parties: {
+                message: 'إحنا مخصصين للعزومات الكبيرة! 🍱 المطعم بيقدر يجهز كميات للمجموعات والصحاب بجودة عالية.',
+                options: [
+                    { text: '📞 تواصل للحجز', nextState: 'booking' },
+                    { text: '🔙 العودة', nextState: 'food_main' }
+                ]
+            }
+        };
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            if (sender === 'bot') {
+                const avatar = document.createElement('div');
+                avatar.classList.add('bot-avatar');
+                avatar.innerHTML = '<i class="fas fa-umbrella-beach"></i>';
+                messageDiv.appendChild(avatar);
+            }
+            const bubble = document.createElement('div');
+            bubble.classList.add('message-bubble');
+            bubble.innerText = text;
+            messageDiv.appendChild(bubble);
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function displayOptions(options) {
+            chatOptions.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('chat-option-button');
+                button.textContent = option.text;
+                button.onclick = () => {
+                    addMessage(option.text, 'user');
+                    setTimeout(() => {
+                        const next = chatData[option.nextState];
+                        if(next) {
+                            addMessage(next.message, 'bot');
+                            displayOptions(next.options);
+                        }
+                    }, 400);
+                };
+                chatOptions.appendChild(button);
+            });
+            setTimeout(scrollToBottom, 50);
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                addMessage(chatData.initial.message, 'bot');
+                displayOptions(chatData.initial.options);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
