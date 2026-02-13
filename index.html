@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taba Beach - الرئيسية</title>
+    <link rel="icon" href="./statics/logoooo.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* التنسيقات الأساسية */
+        :root {
+            --main-gold1: #f1b40b;
+            --main-green1: #398c15;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            text-align: center;
+        }
+
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(18, 82, 95, 0.7), rgba(18, 82, 95, 0.7)), url('your-background-image.jpg');
+            background-size: cover;
+            margin: 40px 5%;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(33, 33, 33, 0.2);
+            color: white;
+        }
+
+        .hero h1 span {
+            color: var(--main-gold1);
+        }
+
+        /* حاوية الزراير الكبيرة */
+        .main-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        /* الزرار الأول التفاعلي */
+        .btn-container {
+            position: relative;
+            width: 200px;
+            height: 55px;
+        }
+
+        .main-btn,
+        .gallery-btn {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white !important;
+        }
+
+        .main-btn {
+            background-color: #0077b6;
+        }
+
+        .gallery-btn {
+            background-color: #e67e22;
+        }
+
+        .main-btn:hover,
+        .gallery-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* خيارات المنيو اللي بتظهر */
+        .menu-options {
+            display: none;
+            /* مخفي افتراضياً */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 50px;
+            border: 2px solid #0077b6;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .option {
+            flex: 1;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            color: #0077b6;
+            transition: background 0.3s;
+        }
+
+        .option:first-child {
+            border-left: 1px solid #0077b6;
+        }
+
+        .option:hover {
+            background-color: #caf0f8;
+        }
+
+        /* زرار تواصل معنا الصغير */
+        .btn-green1 {
+            background: var(--main-green1);
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: flex !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-box">
+                <img src="./statics/logoooo.png" alt="Logo" style="width: 100%;">
+            </div>
+            <div class="site-name">Taba Beach</div>
+        </div>
+        <nav>
+            <input type="checkbox" id="check">
+            <label for="check" class="checkbtn">☰</label>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="contact.html">تواصل معنا</a></li>
+                <li><a href="pricing.html">الأسعار</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <img src="./statics/logoooo.png" alt="Logo" class="responsive-logo">
+        <h1><span>Taba Beach</span></h1>
+        <h2 style="color: #ffffff;"> نورت طابا .. بيتك التاني على البحر</h2><br>
+        <h4 style="color: #ffffff;">هنا مش بس هتقضي يوم، هنا هتاكل لقمة حلوة في مطعمنا، وتعدل مزاجك في الكافيه، وتنام
+            وتصحى على صوت الموج في شاليهاتنا. لو بتدور على مكان تفصل فيه وتنسى زحمة الحياة، مفيش أحسن من حضن جبال طابا
+            وبحرها عندن</h4><br>
+
+        <div class="main-actions">
+            <div class="btn-container">
+                <button id="menuBtn" class="main-btn" onclick="showOptions(event)">تبدأ بـإيـه؟</button>
+
+                <div id="options" class="menu-options">
+                    <button class="option" onclick="location.href='menu1.html'">آكل 🍕</button>
+                    <button class="option" onclick="location.href='menu2.html'">أشرب ☕</button>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <a href="gallery.html" class="gallery-btn">اتفرج على الحلاوة</a>
+            </div>
+        </div>
+        <a href="contact.html" class="btn btn-green1" style="background: var(--main-green1); flex: 1;">
+            <span style="margin-left: 8px;">📞</span> تواصل معنا
+        </a>
+    </section>
+
+    <footer>
+        <div class="footer-bottom"> &copy; 2026 Techno Science - جميع الحقوق محفوظة</div>
+    </footer>
+
+    <script>
+        function showOptions(event) {
+            // منع الحدث من الانتشار عشان الـ window.onclick ميرجعش يقفله فوراً
+            event.stopPropagation();
+            document.getElementById('menuBtn').classList.add('hidden');
+            document.getElementById('options').classList.add('visible');
+        }
+
+        // لو المستخدم داس في أي حتة في الصفحة يرجع الزرار لأصله
+        window.onclick = function (event) {
+            var menuBtn = document.getElementById('menuBtn');
+            var options = document.getElementById('options');
+
+            if (!event.target.closest('.btn-container')) {
+                menuBtn.classList.remove('hidden');
+                options.classList.remove('visible');
+            }
+        }
+    </script>
+</body>
+
+</html>

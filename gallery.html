@@ -1,0 +1,38 @@
+<div class="gallery-grid">
+    <div class="gallery-item"><img src="img1.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="gallery-item"><img src="img2.jpg" onclick="openLightbox(this.src)"></div>
+    </div>
+
+<div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" onwheel="zoom(event)">
+</div>
+
+<script>
+    let scale = 1;
+    const img = document.getElementById('lightbox-img');
+
+    function openLightbox(src) {
+        document.getElementById('lightbox').style.display = 'flex';
+        img.src = src;
+        scale = 1; 
+        img.style.transform = `scale(${scale})`;
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    function zoom(event) {
+        event.preventDefault();
+        scale += event.deltaY * -0.01;
+        scale = Math.min(Math.max(.5, scale), 3); // حدود التكبير
+        img.style.transform = `scale(${scale})`;
+        
+        // العودة للحجم الطبيعي بعد ثانية من التوقف (حسب طلبك)
+        clearTimeout(window.zoomTimeout);
+        window.zoomTimeout = setTimeout(() => {
+            scale = 1;
+            img.style.transform = `scale(1)`;
+        }, 1000);
+    }
+</script>
