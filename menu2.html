@@ -20,16 +20,38 @@
             text-align: center;
         }
 
-        .category-container { max-width: 800px; margin: 0 auto; }
+        .category-container { max-width: 900px; margin: 0 auto; }
 
+        /* تعديل الكارت ليدعم الصورة الجانبية */
         .category-card {
             background: rgba(255, 255, 255, 0.95);
             margin-bottom: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             border-right: 6px solid var(--main-gold);
-            padding: 25px;
             display: none; /* يظهر عند تحميل البيانات */
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* تنسيق جانب صورة المشروبات */
+        .category-image {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* تنسيق جانب النصوص */
+        .category-info {
+            flex: 2;
+            padding: 25px;
         }
 
         .category-info h2 {
@@ -64,6 +86,12 @@
         }
 
         .loader { text-align: center; color: var(--main-gold); font-weight: bold; padding: 20px; }
+
+        /* استجابة الموبايل */
+        @media (max-width: 768px) {
+            .category-card { flex-direction: column; }
+            .category-image { max-width: 100%; height: 200px; }
+        }
     </style>
 </head>
 
@@ -91,7 +119,11 @@
         </div>
 
         <div class="category-container">
-            <div id="section-drinks" class="category-card">
+            <div id="section-drinks" class="category-card" style="display: none;">
+                <div class="category-image">
+                    <img src="./statics/شاي.jpg" alt="مشروبات">
+                </div>
+                
                 <div class="category-info">
                     <h2>☕ ركن المشروبات</h2>
                     <div id="list-drinks" class="price-list"></div>
@@ -110,8 +142,7 @@
     </footer>
 
     <script>
-        // ضع هنا رابط الإكسيل الخاص بالمشروبات فقط   https://docs.google.com/spreadsheets/d/1tRtVNm7AQEm7vZcRXOde10N_ly_9XEat40_i270NkCM/edit?usp=sharing
-        const drinksSheetURL = ' https://docs.google.com/spreadsheets/d/1tRtVNm7AQEm7vZcRXOde10N_ly_9XEat40_i270NkCM/export?format=csv';
+        const drinksSheetURL = 'https://docs.google.com/spreadsheets/d/1tRtVNm7AQEm7vZcRXOde10N_ly_9XEat40_i270NkCM/export?format=csv';
 
         async function loadDrinks() {
             try {
@@ -140,7 +171,7 @@
 
                 if (html !== '') {
                     listContainer.innerHTML = html;
-                    sectionContainer.style.display = 'block';
+                    sectionContainer.style.display = 'flex'; // تفعيل الـ Flex عند العرض
                 }
                 
                 document.getElementById('main-loader').style.display = 'none';

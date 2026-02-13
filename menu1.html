@@ -20,16 +20,38 @@
             text-align: center;
         }
 
-        .category-container { max-width: 800px; margin: 0 auto; }
+        .category-container { max-width: 900px; margin: 0 auto; }
 
+        /* تعديل الكارت ليدعم الصورة بجانب النص */
         .category-card {
             background: rgba(255, 255, 255, 0.95);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             border-right: 6px solid var(--main-gold);
-            padding: 25px;
             display: none; /* مخفي لحد ما الداتا تحمل */
+            overflow: hidden; /* لضمان انحناء زوايا الصورة */
+            display: flex;
+            flex-direction: row; /* الصورة والنص بجانب بعض */
+        }
+
+        /* تنسيق جانب الصورة */
+        .category-image {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* تجعل الصورة تملأ المساحة بدون تمطيط */
+        }
+
+        /* تنسيق جانب المنيو */
+        .category-info {
+            flex: 2;
+            padding: 25px;
         }
 
         .category-info h2 {
@@ -43,21 +65,20 @@
         .price-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px dashed #ccc;
         }
-        .btn-green1 {
-            background: var(--main-green1);
-            padding: 10px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-        }
+
         .item-name { color: #333; font-weight: bold; font-size: 1.1rem; }
         .item-price { color: var(--main-green); font-weight: bold; font-size: 1.1rem; }
 
         .loader { text-align: center; color: var(--main-gold); font-weight: bold; padding: 20px; }
+
+        /* للموبايل: الصورة تطلع فوق المنيو */
+        @media (max-width: 768px) {
+            .category-card { flex-direction: column; }
+            .category-image { max-width: 100%; height: 200px; }
+        }
     </style>
 </head>
 
@@ -85,21 +106,31 @@
         </div>
 
         <div class="category-container">
-            <div id="section-grilled" class="category-card">
-                <div class="category-info">
+            
+            <div id="section-grilled" class="category-card" style="display: none;">
+                <div class="category-image">
+                    <img src="./statics/كفته.jpg" alt="مشويات">
+                </div>
+                <div class="category-info">      
                     <h2>🔥 ركن المشويات</h2>
                     <div id="list-grilled" class="price-list"></div>
                 </div>
             </div>
 
-            <div id="section-crepe" class="category-card">
+            <div id="section-crepe" class="category-card" style="display: none;">
+                <div class="category-image">
+                    <img src="./statics/كريب.jpg" alt="كريب">
+                </div>
                 <div class="category-info">
                     <h2>🌯 ركن الكريب</h2>
                     <div id="list-crepe" class="price-list"></div>
                 </div>
             </div>
 
-            <div id="section-pizza" class="category-card">
+            <div id="section-pizza" class="category-card" style="display: none;">
+                <div class="category-image">
+                    <img src="./statics/بيتزا.jpg" alt="بيتزا">
+                </div>
                 <div class="category-info">
                     <h2>🍕 ركن البيتزا</h2>
                     <div id="list-pizza" class="price-list"></div>
@@ -112,15 +143,14 @@
 
     <footer>
         <div style="text-align: center;">
-        <a href="contact.html" class="btn btn-green1" style="background: var(--main-green1); flex: 1;"> تواصل معنا </a><br><br><hr>
+            <a href="contact.html" class="btn btn-green1"> تواصل معنا </a><br><br><hr>
             <h5 class="footer-bottom"> &copy; 2026 Techno Science - جميع الحقوق محفوظة</h5>
         </div>
     </footer>
 
     <script>
-        // ضع هنا روابط الـ CSV الخاصة بكل شيت
         const sheets = {   
-          grilled: 'https://docs.google.com/spreadsheets/d/1wDrehsg7ljS3rd1PxB9XcwSE5LR5pP6I2WisxFaO8-A/export?format=csv',
+            grilled: 'https://docs.google.com/spreadsheets/d/1wDrehsg7ljS3rd1PxB9XcwSE5LR5pP6I2WisxFaO8-A/export?format=csv',
             crepe: 'https://docs.google.com/spreadsheets/d/1lDhhj4DG8g33s2s9I9xlgf0vgP-Y7oqyLDZdnMHckEo/export?format=csv',
             pizza: 'https://docs.google.com/spreadsheets/d/1u5FVWE9Jl7M-bgJ9fEGVG0WW0RLLGZZTZx2JDY35OeM/export?format=csv'
         };
@@ -141,17 +171,13 @@
                     if (columns.length >= 2) {
                         const type = columns[0].replace(/"/g, '').trim();
                         const price = columns[1].replace(/"/g, '').trim();
-                        html += `
-                            <div class="price-item">
-                                <span class="item-name">${type}</span>
-                                <span class="item-price">${price} ج.م</span>
-                            </div>`;
+                        html += `<div class="price-item"><span class="item-name">${type}</span><span class="item-price">${price} ج.م</span></div>`;
                     }
                 });
 
                 if (html !== '') {
                     listContainer.innerHTML = html;
-                    sectionContainer.style.display = 'block'; // اظهر الكارت لما يحمل
+                    sectionContainer.style.display = 'flex'; // استخدام flex بدلاً من block ليتناسب مع التصميم
                 }
             } catch (e) {
                 console.error("Error loading section: " + sectionId, e);
@@ -159,14 +185,11 @@
         }
 
         async function initMenu() {
-            // تحميل الكل في نفس الوقت
             await Promise.all([
                 fetchAndRender(sheets.grilled, 'list-grilled', 'section-grilled'),
                 fetchAndRender(sheets.crepe, 'list-crepe', 'section-crepe'),
                 fetchAndRender(sheets.pizza, 'list-pizza', 'section-pizza')
             ]);
-            
-            // اخفاء اللودر الرئيسي بعد الانتهاء
             document.getElementById('main-loader').style.display = 'none';
         }
 

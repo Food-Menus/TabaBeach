@@ -95,6 +95,7 @@ header {
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(5px);
+
 }
 
 .logo-container {
@@ -105,6 +106,7 @@ header {
 }
 
 .logo-box {
+    
     width: 65px;
     height: 65px;
     margin-left: 10px;
@@ -124,6 +126,7 @@ header {
 
 /* القائمة المنسدلة */
 nav ul {
+
     display: flex;
     list-style: none;
 }
@@ -133,7 +136,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     text-decoration: none;
     font-size: 18px;
     font-weight: 500;
@@ -147,9 +150,11 @@ nav ul li a:hover {
 /* أيقونة القائمة للهاتف */
 #check {
     display: none;
+    
 }
 
 .checkbtn {
+    
     font-size: 30px;
     color: white;
     cursor: pointer;
@@ -157,6 +162,7 @@ nav ul li a:hover {
     /* مخفية في الشاشات الكبيرة */
 }
 /* الموبايل - Media Query */
+/* الموبايل - Media Query المعدل لإضافة الـ Blur */
 @media (max-width: 850px) {
     .checkbtn {
         display: block;
@@ -166,15 +172,19 @@ nav ul li a:hover {
         position: fixed;
         width: 100%;
         height: auto;
-        background: var(--dark-grey);
+        /* جعل الخلفية شفافة قليلاً لكي يظهر تأثير الـ Blur */
+        background: rgba(0, 0, 0, 0.555); 
         top: 80px;
         right: -100%;
-        /* مخفية جهة اليمين */
         text-align: center;
         transition: all .5s;
         flex-direction: column;
         padding: 20px 0;
-        border-bottom: 2px solid var(--main-gold);
+        border-bottom: 5px solid var(--main-gold);
+
+        /* السحر هنا: إضافة خاصية الـ Blur */
+        backdrop-filter: blur(15px); 
+        -webkit-backdrop-filter: blur(15px); /* لدعم متصفحات آيفون القديمة */
     }
 
     nav ul li {
